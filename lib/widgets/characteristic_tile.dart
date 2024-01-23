@@ -115,7 +115,16 @@ String _convertValueToString() {
   Widget buildValue(BuildContext context) {
     String data = _convertValueToString();
 
-    return Text(data, style: TextStyle(fontSize: 13, color: Colors.grey));
+    Map<String, String> uuidToStringToAppend = {
+      '937B65AB-0CBB-404D-96AC-99F8A7A5B034': ' V',  // Append ' V' for Battery Voltage
+      '937B65AC-0CBB-404D-96AC-99F8A7A5B034': ' °C', // Append ' °C' for Fridge Temperature
+      '937B65AD-0CBB-404D-96AC-99F8A7A5B034': ' V',  // Append ' V' for Solar Voltage
+      // Add more UUIDs and corresponding strings to append as needed
+    };
+    String appendString = uuidToStringToAppend[widget.characteristic.uuid.toString().toUpperCase()] ?? '';
+
+    return Text('$data$appendString', style: TextStyle(fontSize: 13, color: Colors.grey));
+
   }
 
   Widget buildReadButton(BuildContext context) {
@@ -164,21 +173,33 @@ String _convertValueToString() {
 
   @override
   Widget build(BuildContext context) {
-    return ExpansionTile(
-      title: ListTile(
+
+    String serviceTitle;
+    // Determine the title based on the service UUID
+    if (widget.characteristic.uuid.toString().toUpperCase() == '937B65AB-0CBB-404D-96AC-99F8A7A5B034') {
+      serviceTitle = 'Battery Voltage';
+    } else if (widget.characteristic.uuid.toString().toUpperCase() == '937B65AC-0CBB-404D-96AC-99F8A7A5B034') {
+      serviceTitle = 'Fridge Temperature';
+    } else if (widget.characteristic.uuid.toString().toUpperCase() == '937B65AD-0CBB-404D-96AC-99F8A7A5B034') {
+      serviceTitle = 'Solar Voltage';
+    } else {
+      // Default title if the UUID doesn't match any of the specified UUIDs
+      serviceTitle = 'Unknown Characteristic';
+    }
+
+    return Card(
+      child: ListTile(
         title: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            const Text('Characteristic'),
-            buildUuid(context),
+            Text(serviceTitle),
             buildValue(context),
           ],
         ),
         subtitle: buildButtonRow(context),
-        contentPadding: const EdgeInsets.all(0.0),
+        contentPadding: const EdgeInsets.all(16.0),
       ),
-      children: widget.descriptorTiles,
     );
   }
 }
