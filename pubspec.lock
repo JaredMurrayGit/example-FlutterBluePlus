@@ -42,10 +42,10 @@ packages:
     dependency: transitive
     description:
       name: intl
-      sha256: d6f56758b7d3014a48af9701c085700aac781a92a87a62b1333b46d8879661cf
+      sha256: "910f85bce16fb5c6f614e117efa303e85a1731bb0081edf3604a2ae6e9a3cc91"
       url: "https://pub.dev"
     source: hosted
-    version: "0.19.0"
+    version: "0.17.0"
   material_color_utilities:
     dependency: transitive
     description:
@@ -79,18 +79,18 @@ packages:
     dependency: "direct main"
     description:
       name: syncfusion_flutter_charts
-      sha256: "224dfecbe5beb6e6e2a7eb82abe6510e386861c32e9b669ff256d156be788dd8"
+      sha256: "0fba2a6a949308f6c2779195e8439f2c60064ad1b022abe8997f47b09e09fb6b"
       url: "https://pub.dev"
     source: hosted
-    version: "24.1.47+2"
+    version: "19.4.56"
   syncfusion_flutter_core:
     dependency: transitive
     description:
       name: syncfusion_flutter_core
-      sha256: ed8527189f874b9d07f78f2f4306739ce003e8baccfdd7453c0098beef16428f
+      sha256: "9be1bb9bbdb42823439a18da71484f1964c14dbe1c255ab1b931932b12fa96e8"
       url: "https://pub.dev"
     source: hosted
-    version: "24.1.47"
+    version: "19.4.56"
   vector_math:
     dependency: transitive
     description:

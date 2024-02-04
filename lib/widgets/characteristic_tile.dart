@@ -27,10 +27,10 @@ class _CharacteristicTileState extends State<CharacteristicTile> {
 
   BluetoothCharacteristic? _currentlySubscribedCharacteristic;
 
-  void _navigateToSubscriptionPage() {
+  void _navigateToBatteryPage() {
   Navigator.push(
     context,
-    MaterialPageRoute(builder: (context) => SubscriptionPage()),
+    MaterialPageRoute(builder: (context) => BatteryPage()),
   );
   }
 
@@ -120,7 +120,7 @@ Future onSubscribePressed() async {
     _currentlySubscribedCharacteristic = c;
 
     // Navigate to the subscription page
-    _navigateToSubscriptionPage();
+    _navigateToBatteryPage();
   } catch (e) {
     Snackbar.show(ABC.c, prettyException("Subscribe Error:", e), success: false);
   }
