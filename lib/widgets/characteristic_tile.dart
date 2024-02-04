@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 
 import "../utils/snackbar.dart";
+import '../screens/battery_chart.dart';
 
 import "descriptor_tile.dart";
 
@@ -15,6 +16,8 @@ class CharacteristicTile extends StatefulWidget {
 
   const CharacteristicTile({Key? key, required this.characteristic, required this.descriptorTiles}) : super(key: key);
 
+
+
   @override
   State<CharacteristicTile> createState() => _CharacteristicTileState();
 }
@@ -22,17 +25,25 @@ class CharacteristicTile extends StatefulWidget {
 class _CharacteristicTileState extends State<CharacteristicTile> {
   List<int> _value = [];
 
-  ////esgSgSGe
+  BluetoothCharacteristic? _currentlySubscribedCharacteristic;
 
-String _convertValueToString() {
-  if (_value.isEmpty) {
-    return 'No data';
+  void _navigateToSubscriptionPage() {
+  Navigator.push(
+    context,
+    MaterialPageRoute(builder: (context) => SubscriptionPage()),
+  );
   }
 
-  // Assuming _value represents 4 bytes of a float
-  if (_value.length != 8) {
-    return 'Invalid data length';
-  }
+
+  String _convertValueToString() {
+    if (_value.isEmpty) {
+      return 'No data';
+    }
+
+    // Assuming _value represents 4 bytes of a float
+    if (_value.length != 8) {
+      return 'Invalid data length';
+    }
 
   // Create a ByteData instance from _value
   ByteData data = ByteData.sublistView(Uint8List.fromList(_value));
@@ -46,7 +57,6 @@ String _convertValueToString() {
   return stringValue;
 }
 
-////arehaerhaerh
 
   late StreamSubscription<List<int>> _lastValueSubscription;
 
@@ -61,6 +71,9 @@ String _convertValueToString() {
 
   @override
   void dispose() {
+    if (_currentlySubscribedCharacteristic != null) {
+      _currentlySubscribedCharacteristic!.setNotifyValue(false);
+    }
     _lastValueSubscription.cancel();
     super.dispose();
   }
@@ -93,19 +106,25 @@ String _convertValueToString() {
     }
   }
 
-  Future onSubscribePressed() async {
-    try {
-      String op = c.isNotifying == false ? "Subscribe" : "Unubscribe";
-      await c.setNotifyValue(c.isNotifying == false);
-      Snackbar.show(ABC.c, "$op : Success", success: true);
-      if (c.properties.read) {
-        await c.read();
-      }
-      setState(() {});                    
-    } catch (e) {
-      Snackbar.show(ABC.c, prettyException("Subscribe Error:", e), success: false);
+Future onSubscribePressed() async {
+  try {
+    String op = c.isNotifying == false ? "Subscribe" : "Unsubscribe";
+    await c.setNotifyValue(c.isNotifying == false);
+    Snackbar.show(ABC.c, "$op : Success", success: true);
+    if (c.properties.read) {
+      await c.read();
     }
+    setState(() {});
+
+    // Update the currently subscribed characteristic
+    _currentlySubscribedCharacteristic = c;
+
+    // Navigate to the subscription page
+    _navigateToSubscriptionPage();
+  } catch (e) {
+    Snackbar.show(ABC.c, prettyException("Subscribe Error:", e), success: false);
   }
+}
 
   Widget buildUuid(BuildContext context) {
     String uuid = '0x${widget.characteristic.uuid.toString().toUpperCase()}';
